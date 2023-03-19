@@ -21,16 +21,16 @@ def create_model(img_size, n_classes, args):
             drop_path_rate=args.sd,
             norm_layer=partial(nn.LayerNorm, eps=1e-6))
 
-    elif args.arch == 'cait':       
+    elif args.arch == 'cait':
         patch_size = 4 if img_size == 32 else 8
         model = cait_models(
         img_size= img_size,patch_size=patch_size, embed_dim=192, depth=24, num_heads=4, mlp_ratio=args.vit_mlp_ratio,
         qkv_bias=True,num_classes=n_classes,drop_path_rate=args.sd,norm_layer=partial(nn.LayerNorm, eps=1e-6),
         init_scale=1e-5,depth_token_only=2)
-    
-        
+
+
     elif args.arch =='swin':
-        
+
         mlp_ratio = args.vit_mlp_ratio
         window_size = 4
         patch_size = 2 if img_size==32 else 4
@@ -42,5 +42,5 @@ def create_model(img_size, n_classes, args):
     else:
         NotImplementedError("Model architecture not implemented . . .")
 
-         
+
     return model

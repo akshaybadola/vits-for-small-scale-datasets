@@ -10,7 +10,7 @@ class EarlyStopping:
         if mode == 'max':
             self.mode = 1
         else:
-            self.mode = -1 
+            self.mode = -1
 
     def validate(self, value):
         if self._loss * self.mode >= value * self.mode:
@@ -23,11 +23,11 @@ class EarlyStopping:
             if self.best_value * self.mode < value * self.mode:
                 self.best_value = value
             self._step = 0
-        
+
         self._loss = value
 
         return 0
-    
+
 def accuracy(output, target, topk=(1,)):
     with torch.no_grad():
         maxk = max(topk)

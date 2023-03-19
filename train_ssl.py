@@ -1,11 +1,11 @@
 # Copyright (c) Facebook, Inc. and its affiliates.
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
-# 
+#
 #     http://www.apache.org/licenses/LICENSE-2.0
-# 
+#
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -173,11 +173,11 @@ def train(args):
                                        download=True, transform=transform)
     elif args.dataset == "CINIC":
         dataset = datasets.ImageFolder(root=args.datapath,transform=transform)
-    
+
     elif args.dataset == "SVHN":
         dataset = torchvision.datasets.SVHN(root=args.datapath,split='train',
                                          download=True, transform=transform)
-    
+
 
     sampler = torch.utils.data.DistributedSampler(dataset, shuffle=True)
     data_loader = torch.utils.data.DataLoader(
@@ -207,7 +207,7 @@ def train(args):
             drop_rate=args.drop_rate,
             drop_path_rate=args.drop_path_rate,
             norm_layer=partial(nn.LayerNorm, eps=1e-6))
-        
+
         teacher = VisionTransformer(img_size=[args.image_size],
             patch_size=args.patch_size,
             in_chans=args.in_channels,
@@ -253,21 +253,21 @@ def train(args):
     # multi-crop wrapper handles forward with inputs of different resolutions
 
     student = utils.MultiCropWrapper(student, MLPHead(args.mlp_head_in, args.out_dim, args.use_bn_in_head))
-                                            
+
     teacher = utils.MultiCropWrapper(
         teacher, MLPHead(
         args.mlp_head_in,
         args.out_dim,
         use_bn=args.use_bn_in_head,
         norm_last_layer=args.norm_last_layer,
-        
+
     )
     )
 
 
     # move networks to gpu
     student, teacher = student.cuda(), teacher.cuda()
-   
+
     # synchronize batch norms (if any)
     if utils.has_batchnorms(student):
         student = nn.SyncBatchNorm.convert_sync_batchnorm(student)
@@ -348,7 +348,7 @@ def train(args):
     print("Starting SSL training !")
     for epoch in range(start_epoch, args.epochs):
 
-        
+
         data_loader.sampler.set_epoch(epoch)
 
         # ============ training one epoch ... ============
@@ -405,7 +405,7 @@ def train_one_epoch(student, teacher, teacher_without_ddp, view_pred_loss, data_
             loss = total_loss.pop('loss')
             loss_view = total_loss.pop('ce_loss')
 
-        if not math.isfinite(loss.item()): 
+        if not math.isfinite(loss.item()):
             print("Loss is {}, View Pred loss is {}, stopping training".format(loss.item(),loss_view.item()
                                                                                            ), force=True)
             sys.exit(1)
@@ -447,7 +447,7 @@ def train_one_epoch(student, teacher, teacher_without_ddp, view_pred_loss, data_
 
             for param_q, param_k in zip(params_q, params_k):
                 param_k.data.mul_(m).add_((1 - m) * param_q.detach().data)
-            
+
 
 
             # for param_q, param_k in zip(student.module.parameters(), teacher_without_ddp.parameters()):
@@ -501,7 +501,7 @@ class ViewPredLoss(nn.Module):
             for v in range(len(student_out)):
                 if v == iq:
                     continue
-                    
+
 
                 loss = torch.sum(-q * F.log_softmax(student_out[v], dim=-1), dim=-1)
                 total_loss += loss.mean()

@@ -7,8 +7,9 @@ import time
 term_width = 30
 TOTAL_BAR_LENGTH = 65.
 
+
 def progress_bar(current, total, msg=None):
-  
+
     L = []
     if msg:
         L.append(msg)
@@ -27,6 +28,7 @@ def progress_bar(current, total, msg=None):
     else:
         sys.stdout.write('\n')
     sys.stdout.flush()
+
 
 def format_time(seconds):
     days = int(seconds / 3600/24)

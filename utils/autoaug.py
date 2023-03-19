@@ -111,7 +111,7 @@ class CIFAR10Policy(object):
 
     def __repr__(self):
         return "AutoAugment CIFAR10 Policy"
-    
+
 class SVHNPolicy(object):
     """ Randomly choose one of the best 25 Sub-policies on SVHN.
         Example:

@@ -12,7 +12,7 @@ class RandomErasing(object):
         self.sl = sl
         self.sh = sh
         self.r1 = r1
-       
+
     def __call__(self, img):
 
         if random.uniform(0, 1) > self.EPSILON:
@@ -20,7 +20,7 @@ class RandomErasing(object):
 
         for _ in range(100):
             area = img.size()[1] * img.size()[2]
-       
+
             target_area = random.uniform(self.sl, self.sh) * area
             aspect_ratio = random.uniform(self.r1, 1/self.r1)
 

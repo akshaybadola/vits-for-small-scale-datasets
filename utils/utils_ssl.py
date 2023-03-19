@@ -32,6 +32,7 @@ class MultiCropWrapper(nn.Module):
         backbone.fc, backbone.head = nn.Identity(), nn.Identity()
         self.backbone = backbone
         self.mlphead=mlphead
+
     def forward(self, x):
         # convert to list
         if not isinstance(x, list):
@@ -59,6 +60,7 @@ def has_batchnorms(model):
         if isinstance(module, bn_types):
             return True
     return False
+
 
 def clip_gradients(model, clip):
     norms = []
